@@ -1,0 +1,466 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- basic -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- mobile metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <!-- site metas -->
+    <title>Bookings</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- bootstrap css -->
+    <link rel="stylesheet" href="~/NewFolder/css/bootstrap.min.css">
+    <!-- style css -->
+    <link rel="stylesheet" href="~/NewFolder/css/style.css">
+    <!-- responsive-->
+    <link rel="stylesheet" href="~/NewFolder/css/responsive.css">
+    <!-- awesome fontfamily -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
+    <!-- Add Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+    @{
+        ViewData["BodyClass"] = "no-navbar";
+        Layout = null;
+    }
+</head>
+<!-- body -->
+<body class="main-layout">
+    <!-- loader  -->
+    <div class="loader_bg">
+        <div class="loader"><img src="~/NewFolder/images/loading.gif" alt="" /></div>
+    </div>
+    <!-- end loader -->
+    <div id="mySidepanel" class="sidepanel">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+        <a class="active" asp-controller="Home" asp-action="Index">Home</a>
+        <a asp-controller="Home" asp-action="About">About</a>
+        <a asp-controller="Home" asp-action="Contact">Contact</a>
+        <a asp-controller="Booking" asp-action="Book">Schedule</a>
+    </div>
+    <!-- header -->
+    <header>
+        <!-- header inner -->
+        @using Microsoft.AspNetCore.Identity
+        @inject SignInManager<ApplicationUser> signInManager
+        @inject UserManager<ApplicationUser> userManager
+
+        <!-- Header Section -->
+        <div class="head-top">
+            <div class="container-fluid">
+                <div class="row d_flex">
+                    <div class="col-sm-3">
+                        <div class="logo">
+                            <a asp-controller="Home" asp-action="Index">
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7l3vPLF0X9MbVkKU5NMU4Q4bF7chocDEgcg&s" width="76" />
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-sm-9">
+                        <ul class="email text_align_right">
+                            <!-- Check if user is logged in -->
+                            @if (signInManager.IsSignedIn(User))
+                            {
+                                var appUser = await userManager.GetUserAsync(User);
+                                if (appUser != null)
+                                {
+                                    // Display Admin User Dropdown
+                                    if (User.IsInRole("admin"))
+                                    {
+                                        <li class="nav-item dropdown">
+                                            <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                @(appUser.FirstName + " " + appUser.LastName + " (Admin)")
+                                            </a>
+                                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="adminDropdown">
+                                                <li><a class="dropdown-item text-dark" asp-area="" asp-controller="ManageBookings" asp-action="Dashboard">Dashboard</a></li>
+                                                <li><a class="dropdown-item text-dark" asp-area="" asp-controller="Booking" asp-action="BookingStatus">Booking Status</a></li>
+                                                <li><a class="dropdown-item text-dark" asp-area="" asp-controller="ManageBookings" asp-action="DatesBooked">Bookings</a></li>
+                                                <li><hr class="dropdown-divider"></li>
+                                                <li><a class="dropdown-item text-dark" asp-area="" asp-controller="Account" asp-action="Logout">Logout</a></li>
+                                            </ul>
+                                        </li>
+                                    }
+                                    // Display Client User Dropdown
+                                    else if (User.IsInRole("client"))
+                                    {
+                                        <li class="nav-item dropdown">
+                                            <a class="nav-link dropdown-toggle" href="#" id="clientDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                @(appUser.FirstName + " " + appUser.LastName + " (Client)")
+                                            </a>
+                                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="clientDropdown">
+                                                <li><a class="dropdown-item text-dark" asp-area="" asp-controller="Booking" asp-action="BookingStatus">Booking Status</a></li>
+                                                <li><hr class="dropdown-divider"></li>
+                                                <li><a class="dropdown-item text-dark" asp-area="" asp-controller="Account" asp-action="Logout">Logout</a></li>
+                                            </ul>
+                                        </li>
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                <!-- Display Login button if user is not logged in -->
+                                <li class="d_none">
+                                    <a asp-controller="Account" asp-action="Login">
+                                        <i class="fa fa-user" aria-hidden="true"></i> Login
+                                    </a>
+                                </li>
+                            }
+                            <!-- Always display the open navigation button -->
+                            <li>
+                                <button class="openbtn" onclick="openNav()">
+                                    <img src="~/NewFolder/images/menu_btn.png" />
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </header>
+    <!-- start slider section -->
+    <div id="top_section" class=" banner_main">
+        <div class="container">
+            <div class="row d_flex">
+                <div class="col-md-6">
+                    <div class="airmic">
+                        <h1>Book Your Event In A Snapp </h1>
+                        <p>
+                            Welcome to Phill's Bookings, where your dream event comes to life with just a click! Whether it's a corporate gathering, a personal celebration, or anything in between, we make booking your perfect event easy and stress-free. With a passion for detail and a commitment to excellence, we ensure that every occasion is unforgettable. Ready to make your next event extraordinary? Let’s get started today with Phill’s Bookings!
+                        </p>
+                        <a class="read_more" asp-controller="Booking" asp-action="Book">Book Now </a>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mic_img">
+                        <figure><img src="~/NewFolder/images/right_side.png" alt="#" /></figure>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end slider section -->
+    <!-- services -->
+    <div class="services">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="titlepage text_align_center">
+                        <h2>Our Services</h2>
+                        <p>At Phill's Bookings, we offer a wide range of services to ensure every event is a success. From venue selection and catering to entertainment and decor, we handle all the details, so you can focus on enjoying the experience. Our team of experts works closely with you to bring your vision to life, offering personalized recommendations and top-tier service for both small gatherings and large-scale events. Whatever your event requires, Phill’s Bookings is your one-stop destination for flawless planning and execution.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="service_img text_align_center">
+                        <i><img src="~/NewFolder/images/service1.png" alt="#" /></i>
+                    </div>
+                    <div class="service_text text_align_center">
+                        <h3>Perfomances</h3>
+                        <p>At Phill's Bookings, we offer a variety of performances tailored to your event's needs, adjusting our style and energy to perfectly match the atmosphere you're looking to create.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="service_img text_align_center">
+                        <i><img src="~/NewFolder/images/service2.png" alt="#" /></i>
+                    </div>
+                    <div class="service_text text_align_center">
+                        <h3>Mics</h3>
+                        <p>At Phill's Bookings, we don't just perform—we provide the perfect selection of equipment, including high-quality microphones, tailored to suit the unique needs of your event.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="service_img text_align_center">
+                        <i><img src="~/NewFolder/images/service3.png" alt="#" /></i>
+                    </div>
+                    <div class="service_text text_align_center">
+                        <h3>Sound</h3>
+                        <p>At Phill's Bookings, we bring our own sound equipment, so you can skip the stress of hiring and focus on enjoying your event.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end services -->
+    <!-- about -->
+    <div id="about" class="about">
+        <div class="container-fluid">
+            <div class="row d_flex">
+                <div class="col-md-6">
+                    <div class="titlepage text_align_left">
+                        <h2>About Us</h2>
+                        <p>Phill's Bookings is your go-to solution for seamless event planning and unforgettable performances. We specialize in providing top-quality sound, personalized performances, and everything you need to make your event extraordinary. From intimate gatherings to large celebrations, we tailor our services to fit your unique vision, ensuring every detail is perfect.</p>
+                        <a class="read_more" asp-controller="Home" asp-action="About">Read More</a>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="about_img">
+                        <figure><img class="img_responsive" src="~/NewFolder/images/about_img.jpg" alt="#" /></figure>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end about -->
+    <!-- our_mics -->
+    <div class="our_mics">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-10 offset-md-1">
+                    <div class="titlepage text_align_center">
+                        <h2>Our Perfomances</h2>
+                        <p>From live music to tailored acts, our performances are designed to match the vibe of your event. We adjust our style, energy, and repertoire to create an unforgettable experience for your guests.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 col-sm-6 margin_bottom40">
+                    <div id="ho_show" class="mics">
+                        <figure><img class="img_responsive" src="images/mics_img1.jpg" alt="#" /></figure>
+                        <div class="mics_icon">
+                            <a href="javascript:void(0)">
+                                <i class="fa fa-search" aria-hidden="true"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6 margin_bottom40">
+                    <div id="ho_show" class="mics">
+                        <figure><img class="img_responsive" src="images/mics_img2.jpg" alt="#" /></figure>
+                        <div class="mics_icon">
+                            <a href="javascript:void(0)">
+                                <i class="fa fa-search" aria-hidden="true"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6 margin_bottom40">
+                    <div id="ho_show" class="mics">
+                        <figure><img class="img_responsive" src="images/mics_img3.jpg" alt="#" /></figure>
+                        <div class="mics_icon">
+                            <a href="javascript:void(0)">
+                                <i class="fa fa-search" aria-hidden="true"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6 margin_bottom40">
+                    <div id="ho_show" class="mics">
+                        <figure><img class="img_responsive" src="~/NewFolder/images/mics_img4.jpg" alt="#" /></figure>
+                        <div class="mics_icon">
+                            <a href="javascript:void(0)">
+                                <i class="fa fa-search" aria-hidden="true"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6 margin_bottom40">
+                    <div id="ho_show" class="mics">
+                        <figure><img class="img_responsive" src="~/NewFolder/images/mics_img5.jpg" alt="#" /></figure>
+                        <div class="mics_icon">
+                            <a href="javascript:void(0)">
+                                <i class="fa fa-search" aria-hidden="true"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6 margin_bottom40">
+                    <div id="ho_show" class="mics">
+                        <figure><img class="img_responsive" src="~/NewFolder/images/mics_img6.jpg" alt="#" /></figure>
+                        <div class="mics_icon">
+                            <a href="javascript:void(0)">
+                                <i class="fa fa-search" aria-hidden="true"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end our_mics -->
+    <!-- testimonial -->
+    <div class="testimonial">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 offset-md-2">
+                    <div class="titlepage text_align_center">
+                        <h2>Our Client Says</h2>
+                        <p>From live music to tailored acts, our performances are designed to match the vibe of your event. We adjust our style, energy, and repertoire to create an unforgettable experience for your guests. </p>
+                    </div>
+                </div>
+            </div>
+            <div class="row d_flex">
+                <div class="col-md-10 offset-md-1">
+                    <div id="testimo" class="carousel slide our_testimonial" data-ride="carousel">
+                        <ol class="carousel-indicators">
+                            <li data-target="#testimo" data-slide-to="0" class="active"></li>
+                            <li data-target="#testimo" data-slide-to="1"></li>
+                            <li data-target="#testimo" data-slide-to="2"></li>
+                        </ol>
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <div class="container">
+                                    <div class="carousel-caption posi_in">
+                                        <div class="testomoniam_text">
+                                            <i class="text_align_left d-block"><img src="~/NewFolder/images/icon.png" alt="#" /></i>
+                                            <p>Phill's Bookings made our event unforgettable! The performance was incredible, the sound quality was perfect, and the whole experience was seamless. Highly recommend them for any occasion!</p>
+                                            <i class="text_align_right d-block"><img src="~/NewFolder/images/icon_right.png" alt="#" /></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="carousel-item">
+                                <div class="container">
+                                    <div class="carousel-caption posi_in">
+                                        <div class="testomoniam_text">
+                                            <i class="text_align_left d-block"><img src="images/icon.png" alt="#" /></i>
+                                            <p>Amazing service from start to finish. The team at Phill's Bookings provided top-notch sound equipment and a performance that had everyone talking. They truly made our event stand out!</p>
+                                            <i class="text_align_right d-block"><img src="~/NewFolder/images/icon_right.png" alt="#" /></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="carousel-item">
+                                <div class="container">
+                                    <div class="carousel-caption posi_in">
+                                        <div class="testomoniam_text">
+                                            <i class="text_align_left d-block"><img src="~/NewFolder/images/icon.png" alt="#" /></i>
+                                            <p>We couldn't have asked for a better experience! From the personalized performances to the excellent sound setup, Phill's Bookings exceeded our expectations. Thank you for making our event a huge success!</p>
+                                            <i class="text_align_right d-block"><img src="~/NewFolder/images/icon_right.png" alt="#" /></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <a class="carousel-control-prev" href="#testimo" role="button" data-slide="prev">
+                            <i class="fa fa-angle-left" aria-hidden="true"></i>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#testimo" role="button" data-slide="next">
+                            <i class="fa fa-angle-right" aria-hidden="true"></i>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end testimonial -->
+    <!-- contact section -->
+    <div class="contact left_cross_right">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="titlepage text_align_left">
+                        <h2>Request a call back.</h2>
+                        <p>Need assistance or have questions? Request a call back, and our team will get in touch with you at your convenience to help plan your perfect event.</p>
+                    </div>
+                    <div class="col-md-12">
+                        <form id="request" class="main_form">
+                            <div class="row">
+                                <div class="col-md-12 ">
+                                    <input class="contactus" placeholder="You Name" type="type" name="Name">
+                                </div>
+                                <div class="col-md-6">
+                                    <input class="contactus" placeholder="Email" type="type" name="Email">
+                                </div>
+                                <div class="col-md-6">
+                                    <input class="contactus" placeholder="Phone Number" type="type" name="Phone Number">
+                                </div>
+                                <div class="col-md-12">
+                                    <textarea class="textarea" placeholder="Message" type="Message"></textarea>
+                                </div>
+                                <div class="col-md-12">
+                                    <button class="send_btn">Send</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end contact section -->
+        <!-- footer -->
+        <footer>
+            <div class="footer">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="Informa conta">
+                                <h3>Adderess</h3>
+                                <ul>
+                                    <li>
+                                        35 Georgia Crescent <br>Randburg 2188
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="Informa helpful">
+                                <ul>
+                                    <li><a asp-controller="Home" asp-action="Index">Home</a></li>
+                                    <li><a asp-controller="Home" asp-action="About">About</a></li>
+                                    <li><a asp-controller="Home" asp-action="Contact">Contact</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="Informa conta">
+                                <h3>Contact Us</h3>
+                                <ul>
+                                    <li>
+                                        <a href="Javascript:void(0)">
+                                            (+27) 76 646 8917
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="Javascript:void(0)">
+                                            Motsinoni.p955@gmail.com
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <ul class="social_icon text_align_center">
+                                <li> <a href="https://www.facebook.com"><i class="fa fa-facebook-f"></i></a></li>
+                                <li> <a href="https://x.com/?lang=en&mx=2"><i class="fa fa-twitter"></i></a></li>
+                                <li> <a href="https://www.instagram.com/accounts/login/?hl=en"><i class="fa fa-instagram" aria-hidden="true"></i></a></li>
+                            </ul>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="Informa">
+                                <h3>Newsletter</h3>
+                                <form class="newslatter_form">
+                                    <input class="ente" placeholder="Enter your email" type="text" name="Enter your email">
+                                    <button class="subs_btn">Subscribe</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="copyright text_align_center">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-10 offset-md-1">
+                                <p>© 2024 All Rights Reserved. Design by Motsinoni Phillimon</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!-- end footer -->
+        <!-- Javascript files-->
+        <script src="~/NewFolder/js/jquery.min.js"></script>
+        <script src="~/NewFolder/js/bootstrap.bundle.min.js"></script>
+        <script src="~/NewFolder/js/jquery-3.0.0.min.js"></script>
+        <script src="~/NewFolder/js/custom.js"></script>
+</body>
+</html>

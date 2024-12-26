@@ -1,0 +1,72 @@
+﻿@{
+    ViewData["Title"] = "Dates Booked";
+
+    // Retrieve data passed from the controller
+    var bookedDates = ViewBag.BookedDates as List<DateTime> ?? new List<DateTime>();
+    var currentMonth = (int)ViewBag.CurrentMonth;
+    var currentYear = (int)ViewBag.CurrentYear;
+
+    // Calculate details for the current month
+    var daysInMonth = DateTime.DaysInMonth(currentYear, currentMonth);
+    var firstDayOfMonth = new DateTime(currentYear, currentMonth, 1);
+    var dayOfWeek = (int)firstDayOfMonth.DayOfWeek;
+
+    // Calculate previous and next months
+    var previousMonth = currentMonth == 1 ? 12 : currentMonth - 1;
+    var previousYear = currentMonth == 1 ? currentYear - 1 : currentYear;
+    var nextMonth = currentMonth == 12 ? 1 : currentMonth + 1;
+    var nextYear = currentMonth == 12 ? currentYear + 1 : currentYear;
+}
+
+<h2>Calendar for @firstDayOfMonth.ToString("MMMM yyyy")</h2>
+
+<div class="mb-3">
+    <a asp-action="DatesBooked" asp-route-month="@previousMonth" asp-route-year="@previousYear" class="btn btn-secondary">Previous Month</a>
+    <a asp-action="DatesBooked" asp-route-month="@nextMonth" asp-route-year="@nextYear" class="btn btn-secondary">Next Month</a>
+</div>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Sun</th>
+            <th>Mon</th>
+            <th>Tue</th>
+            <th>Wed</th>
+            <th>Thu</th>
+            <th>Fri</th>
+            <th>Sat</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int day = 1;
+            for (int i = 0; i < 6; i++) // Maximum 6 rows for a month
+            {
+                <tr>
+                    @for (int j = 0; j < 7; j++) // 7 days in a week
+                    {
+                        if (i == 0 && j < dayOfWeek || day > daysInMonth)
+                        {
+                            <td></td>
+                        }
+                        else
+                        {
+                            var currentDate = new DateTime(currentYear, currentMonth, day);
+
+                            if (bookedDates.Any(d => d.Date == currentDate))
+                            {
+                                <td class="bg-success text-white">@day</td>
+                            }
+                            else
+                            {
+                                <td>@day</td>
+                            }
+
+                            day++;
+                        }
+                    }
+                </tr>
+            }
+        }
+    </tbody>
+</table>

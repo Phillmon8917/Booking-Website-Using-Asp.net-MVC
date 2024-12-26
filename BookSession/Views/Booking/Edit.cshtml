@@ -1,0 +1,79 @@
+﻿@model EventDetailsDto
+@{
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width; initial-scale=1.0" />
+
+    <!-- Client Side Validation using JQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
+
+</head>
+<body>
+            <div class="row">
+                <div class="col-md-8 mx-auto rounded border p-5">
+
+                    <h2 class="p-4 align-content-center text-center mb-3">Edit Event Details</h2>
+                    <hr />
+
+                    <form method="post">
+
+                        <div class="row mb-3">
+                            <label class="col-sm-4 col-form-label">Event Category :</label>
+                            <div class="col-sm-8">
+                                <select class="form-select" asp-for="EventCategory">
+                                    <option value="">-- Select a response --</option>
+                                    <option value='Wedding'>Wedding</option>
+                                    <option value='Party'>Party</option>
+                                    <option value='Bash'>Bash</option>
+                                    <option value='Church'>Church</option>
+                                    <option value='Funeral'>Funeral</option>
+                                    <option value='Other'>Other</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label class="col-sm-4 col-form-label">Event Date :</label>
+                            <div class="col-sm-8">
+                                <input class="form-control" asp-for="EventDate" type="datetime-local">
+                                <span asp-validation-for="EventDate" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label class="col-sm-4 col-form-label">Payment Offer In ZAR:</label>
+                            <div class="col-sm-8">
+                                <input class="form-control" asp-for="EventPayment">
+                                <span asp-validation-for="EventPayment" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label class="col-sm-4 col-form-label">Event Description:</label>
+                            <div class="col-sm-8">
+                                <textarea class="form-control" asp-for="EventDescription" rows="3"></textarea>
+                                <span asp-validation-for="EventDescription" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="offset-sm-4 col-sm-4 d-grid">
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </div>
+                            <div class="col-sm-4 d-grid">
+                                <a class="btn btn-outline-warning" asp-controller="Booking" asp-action="BookingStatus" role="button">Cancel</a>
+                            </div>
+                        </div>
+
+                    </form>
+
+        </div>
+    </div>
+</body>
+</html>

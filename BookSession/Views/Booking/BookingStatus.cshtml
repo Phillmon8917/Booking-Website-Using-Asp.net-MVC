@@ -1,0 +1,75 @@
+﻿@model List<EventDetails>
+@{
+    string search = (string)ViewData["Search"]!;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+<body>
+
+
+    <div class="p-5">
+        <h1 class="text-center mb-5">Booking Status</h1>
+    </div>
+    <div class="row mb-5">
+        <div class="col">
+        </div>
+
+        @if (ViewBag.SuccessMessage != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>@ViewBag.SuccessMessage</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+
+        <div class="col">
+            <form class="d-flex">
+                <input class="form-control me-2" type="search" value="@search" placeholder="Seach by booking Id" />
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+        </div>
+        <div style="margin-bottom: 20px"></div>
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered table-striped ">
+                <thead class="bg-info text-center text-white">
+                    <tr class="col-sm-12">
+                        <th class="col-sm-1">Id </th>
+                        <th class="col-sm-1">Event Category</th>
+                        <th class="col-sm-1">Event Date</th>
+                        <th class="col-sm-1">Event Time</th>
+                        <th class="col-sm-1">Event Status</th>
+                        <th class="col-sm-1" style="width: 10%; cursor: pointer;" onclick="sortTable('CreatedAt')">CreatedAt</th>
+                        <th class="col-sm-1">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var detail in Model)
+                    {
+                        <tr class="col-sm-12">
+                            <td>@detail.Id</td>
+                            <td>@detail.EventCategory</td>
+                            <td>@detail.EventDate.ToString("dd/MM/yyyy")</td>
+                            <td>@detail.EventDate.ToString("HH:mm")</td>
+                            <td>@detail.EventStatus</td>
+                            <td>@detail.CreatedAt.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td style="white-space:nowrap; width: 15%;">
+                                <a class="btn btn-primary" asp-controller="Booking" asp-action="Edit" asp-route-id="@detail.Id">Edit</a>
+                                <a class="btn btn-success" asp-controller="Booking" asp-action="CompleteEvent" asp-route-id="@detail.Id" onclick="return confirm('Are you sure?') ">CompleteEvent</a>
+                                <a class="btn btn-danger" asp-controller="Booking" asp-action="Cancel" asp-route-id="@detail.Id" onclick="return confirm('Are you sure?') ">Remove</a>
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+</body>
+</html>

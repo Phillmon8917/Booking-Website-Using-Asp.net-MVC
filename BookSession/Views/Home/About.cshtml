@@ -1,0 +1,220 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- basic -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- mobile metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <!-- site metas -->
+    <title>microo</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- bootstrap css -->
+    <link rel="stylesheet" href="~/NewFolder/css/bootstrap.min.css">
+    <!-- style css -->
+    <link rel="stylesheet" href="~/NewFolder/css/style.css">
+    <!-- responsive-->
+    <link rel="stylesheet" href="~/NewFolder/css/responsive.css">
+    <!-- awesome fontfamily -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
+
+    @{
+        ViewData["BodyClass"] = "no-navbar";
+        Layout = null;
+    }
+</head>
+<!-- body -->
+<body class="main-layout inner_page">
+    <!-- loader  -->
+    <div class="loader_bg">
+        <div class="loader"><img src="~/NewFolder/images/loading.gif" alt="" /></div>
+    </div>
+    <!-- end loader -->
+    <div id="mySidepanel" class="sidepanel">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+        <a asp-controller="Home" asp-action="Index">Home</a>
+        <a class="active" asp-controller="Home" asp-action="About">About</a>
+        <a asp-controller="Home" asp-action="Contact">Contact</a>
+        <a asp-controller="Booking" asp-action="Book">Schedule</a>
+    </div>
+    <!-- header -->
+    <header>
+        <!-- header inner -->
+        <!-- header inner -->
+        @using Microsoft.AspNetCore.Identity
+        @inject SignInManager<ApplicationUser> signInManager
+        @inject UserManager<ApplicationUser> userManager
+
+        <!-- Header Section -->
+        <div class="head-top">
+            <div class="container-fluid">
+                <div class="row d_flex">
+                    <div class="col-sm-3">
+                        <div class="logo">
+                            <a asp-controller="Home" asp-action="Index">
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7l3vPLF0X9MbVkKU5NMU4Q4bF7chocDEgcg&s" width="76" />
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-sm-9">
+                        <ul class="email text_align_right">
+                            <!-- Check if user is logged in -->
+                            @if (signInManager.IsSignedIn(User))
+                            {
+                                var appUser = await userManager.GetUserAsync(User);
+                                if (appUser != null)
+                                {
+                                    // Display Admin User Dropdown
+                                    if (User.IsInRole("admin"))
+                                    {
+                                        <li class="nav-item dropdown">
+                                            <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                @(appUser.FirstName + " " + appUser.LastName + " (Admin)")
+                                            </a>
+                                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="adminDropdown">
+                                                <li><a class="dropdown-item text-dark" asp-area="" asp-controller="ManageBookings" asp-action="Dashboard">Dashboard</a></li>
+                                                <li><a class="dropdown-item text-dark" asp-area="" asp-controller="Booking" asp-action="BookingStatus">Booking Status</a></li>
+                                                <li><a class="dropdown-item text-dark" asp-area="" asp-controller="ManageBookings" asp-action="DatesBooked">Bookings</a></li>
+                                                <li><hr class="dropdown-divider"></li>
+                                                <li><a class="dropdown-item text-dark" asp-area="" asp-controller="Account" asp-action="Logout">Logout</a></li>
+                                            </ul>
+                                        </li>
+                                    }
+                                    // Display Client User Dropdown
+                                    else if (User.IsInRole("client"))
+                                    {
+                                        <li class="nav-item dropdown">
+                                            <a class="nav-link dropdown-toggle" href="#" id="clientDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                @(appUser.FirstName + " " + appUser.LastName + " (Client)")
+                                            </a>
+                                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="clientDropdown">
+                                                <li><a class="dropdown-item text-dark" asp-area="" asp-controller="Booking" asp-action="BookingStatus">Booking Status</a></li>
+                                                <li><hr class="dropdown-divider"></li>
+                                                <li><a class="dropdown-item text-dark" asp-area="" asp-controller="Account" asp-action="Logout">Logout</a></li>
+                                            </ul>
+                                        </li>
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                <!-- Display Login button if user is not logged in -->
+                                <li class="d_none">
+                                    <a asp-controller="Account" asp-action="Login">
+                                        <i class="fa fa-user" aria-hidden="true"></i> Login
+                                    </a>
+                                </li>
+                            }
+                            <!-- Always display the open navigation button -->
+                            <li>
+                                <button class="openbtn" onclick="openNav()">
+                                    <img src="~/NewFolder/images/menu_btn.png" />
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- end header -->
+    <!-- about -->
+    <div id="about" class="about">
+        <div class="container-fluid">
+            <div class="row d_flex">
+                <div class="col-md-6">
+                    <div class="titlepage text_align_left">
+                        <h2>About Us</h2>
+                        <p>At Phill's Bookings, we specialize in turning your event visions into reality. Whether you're hosting an intimate gathering or a large celebration, we provide a wide range of services designed to meet all your event needs. From exceptional performances and high-quality sound equipment to professional microphones and personalized event planning, our team is committed to making every detail flawless. We pride ourselves on offering customized solutions, ensuring that each event is unique and unforgettable.</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="about_img">
+                        <figure><img class="img_responsive" src="~/NewFolder/images/about_img.jpg" alt="#" /></figure>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end about -->
+    <!-- footer -->
+    <footer>
+        <div class="footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="Informa conta">
+                            <h3>Adderess</h3>
+                            <ul>
+                                <li>
+                                    35 Georgia Crescent <br>Randburg 2188
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="Informa helpful">
+                            <ul>
+                                <li><a asp-controller="Home" asp-action="Index">Home</a></li>
+                                <li><a asp-controller="Home" asp-action="About">About</a></li>
+                                <li><a asp-controller="Home" asp-action="Contact">Contact</a></li>
+                                <li><a asp-controller="Booking" asp-action="Book">Schedule</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="Informa conta">
+                            <h3>Contact Us</h3>
+                            <ul>
+                                <li>
+                                    <a href="Javascript:void(0)">
+                                        (+27) 76 646 8917
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="Javascript:void(0)">
+                                        Motsinoni.p955@gmail.com
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <ul class="social_icon text_align_center">
+                            <li> <a href="https://www.facebook.com"><i class="fa fa-facebook-f"></i></a></li>
+                            <li> <a href="https://x.com/?lang=en&mx=2"><i class="fa fa-twitter"></i></a></li>
+                            <li> <a href="https://www.instagram.com/accounts/login/?hl=en"><i class="fa fa-instagram" aria-hidden="true"></i></a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="Informa">
+                            <h3>Newsletter</h3>
+                            <form class="newslatter_form">
+                                <input class="ente" placeholder="Enter your email" type="text" name="Enter your email">
+                                <button class="subs_btn">Subscribe</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="copyright text_align_center">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-10 offset-md-1">
+                            <p>© 2024 All Rights Reserved. Design by  Motsinoni Phillimon</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- end footer -->
+    <!-- Javascript files-->
+    <script src="~/NewFolder/js/jquery.min.js"></script>
+    <script src="~/NewFolder/js/bootstrap.bundle.min.js"></script>
+    <script src="~/NewFolder/js/jquery-3.0.0.min.js"></script>
+    <script src="~/NewFolder/js/custom.js"></script>
+</body>
+</html>

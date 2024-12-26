@@ -1,0 +1,72 @@
+﻿@using Microsoft.AspNetCore.Html
+@model List<EventDetails>
+@{
+    string search = (string)ViewData["Search"]!;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+<body>
+
+    <div class="p-5">
+        <h1 class="text-center mb-5">List Of Bookings</h1>
+    </div>
+    <div class="row mb-5">
+        <div class="col">
+        </div>
+        <div class="col">
+            <form class="d-flex">
+                <input class="form-control me-2" type="search" value="@search" placeholder="Seach by category" />
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+        </div>
+        <div style="margin-bottom: 20px"></div>
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered table-striped ">
+                <thead class="bg-info text-center text-white">
+                    <tr class="col-sm-12">
+                        <th class="col-sm-1">Id </th>
+                        <th class="col-sm-1">Event Category</th>
+                        <th class="col-sm-1">Event Date</th>
+                        <th class="col-sm-1">Event Time</th>
+                        <th class="col-sm-1">Event Payment</th>
+                        <th class="col-sm-1">Event Status</th>
+                        <th class="col-sm-1">Event Desription</th>
+                        <th class="col-sm-1" style="width: 10%; cursor: pointer;" onclick="sortTable('CreatedAt')">CreatedAt</th>
+                        <th class="col-sm-1">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var details in Model)
+                    {
+                        <tr class="col-sm-12">
+                            <td>@details.Id</td>
+                            <td>@details.EventCategory</td>
+                            <td>@details.EventDate.ToString("dd/MM/yyyy")</td>
+                            <td>@details.EventDate.ToString("HH:mm")</td>
+                            <td>R @details.EventPayment</td>
+                            <td>@details.EventStatus</td>
+                            <td>@details.EventDescription</td>
+                            <td>@details.CreatedAt.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td style="white-space:nowrap; width: 15%;">
+                                <a class="btn btn-success btn-sm" asp-controller="ManageBookings" asp-action="AcceptBooking" asp-route-id="@details.Id">AcceptBooking</a>
+                                <a class="btn btn-warning btn-sm" asp-controller="ManageBookings" asp-action="RejectBooking" asp-route-id="@details.Id" onclick="return confirm('Are you sure?') ">RejectBooking</a>
+                                <a class="btn btn-primary btn-sm" asp-controller="ManageBookings" asp-action="Edit" asp-route-id="@details.Id">Edit</a>
+                                <a class="btn btn-danger btn-sm" asp-controller="ManageBookings" asp-action="DeleteBooking" asp-route-id="@details.Id" onclick="return confirm('Are you sure?')">Delete</a>
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+
+</body>
+</html>
