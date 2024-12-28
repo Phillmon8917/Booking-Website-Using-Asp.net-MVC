@@ -9,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
       {
-          options.UseSqlServer("Data Source=SD-PHILLIMONM01\\SQLEXPRESS2019;Initial Catalog=Bookings;Integrated Security=True;Trust Server Certificate=True");
+          options.UseSqlServer("Server=tcp:.database.windows.net,1433;Initial Catalog=BookSession_db;Persist Security Info=False;User ID=MotsinoniPhill;Password=@Mp0606255955;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
       }
     );
 
